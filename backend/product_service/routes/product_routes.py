@@ -99,3 +99,24 @@ def update_product(product_id):
 
     except Exception as e:
         return jsonify({'message' : str(e)}), 500
+    
+
+@products.route("/<string:product_id>",methods=['DELETE'])
+def delete_product(product_id):
+    try:
+        product = Product.query.get(product_id)
+        if not product: 
+            return jsonify({'message' : 'Product Not Found' }),404
+        
+        for image in product.images:
+            db.session.delete(image)
+
+        db.session.delete(product)
+        db.session.commit()
+
+        return jsonify({'message': 'Product deleted successfully'}), 200
+
+    
+        
+    except Exception as e:
+        return jsonify({'message' : str(e)}), 500
