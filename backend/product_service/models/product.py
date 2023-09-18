@@ -17,4 +17,22 @@ class Product(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    images = db.relationship('ProductImage', backref='products', lazy=True)
+    images = db.relationship('ProductImage', back_populates='product', lazy=True)
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    def serialize(self):
+        return {
+            'id' : self.id,
+            'name': self.name,
+            'description': self.description,
+            'price': self.price,
+            'stock_quantity': self.stock_quantity,
+            'manufacturer': self.manufacturer,
+            'category_id': self.category_id,
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat(),
+            'images': [img.serialize() for img in self.images]
+        }

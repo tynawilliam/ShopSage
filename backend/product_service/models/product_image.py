@@ -11,3 +11,13 @@ class ProductImage(db.Model):
     image_url = db.Column(db.String(512), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    product = db.relationship('Product', back_populates="images")
+    
+    def serialize(self):
+        return {
+            'id': self.id,
+            'product_id': self.product_id,
+            'image_url': self.image_url,
+            'alt_text': self.alt_text
+        }
