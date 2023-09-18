@@ -19,5 +19,4 @@ class ProductImage(db.Model):
             'id': self.id,
             'product_id': self.product_id,
             'image_url': self.image_url,
-            'alt_text': self.alt_text
         }
