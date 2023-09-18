@@ -30,6 +30,19 @@ def new_product():
         return jsonify({'message' : str(e)}), 500
 
 @products.route('/', methods=['GET'])
-def get_products():
+def get_all_products():
     products = Product.query.all()
     return jsonify([product.serialize() for product in products])
+
+@products.route("/<string:product_id>",methods=['GET'])
+def get_product(product_id):
+    try:
+        product = Product.query.get(product_id)
+        if not product: 
+            return jsonify({'message' : 'Product Not Found' }),404
+        
+        product_data=product.serialize()
+        return jsonify(product_data), 200
+    
+    except Exception as e:
+        return jsonify({'message' : str(e)}), 500
